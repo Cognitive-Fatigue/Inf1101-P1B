@@ -1,0 +1,24 @@
+name: MSP430 Code Check
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install MSP430 GCC Toolchain
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gcc-msp430 binutils-msp430
+
+    - name: Compile Assembly Code
+      run: |
+        msp430-elf-gcc -mmcu=<MSP chip model> -nostartfiles -o output.elf <filename>
