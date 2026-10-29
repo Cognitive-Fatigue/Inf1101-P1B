@@ -15,10 +15,8 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Install MSP430 GCC Toolchain
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y gcc-msp430 binutils-msp430
+      uses: meijierik/setup-msp430-gcc@v1
 
     - name: Compile Assembly Code
       run: |
-        msp430-elf-gcc -mmcu=<MSP chip model> -nostartfiles -o output.elf <filename>
+        msp430-elf-gcc -mmcu=msp430f5529 -nostartfiles -o output.elf watch.asm
