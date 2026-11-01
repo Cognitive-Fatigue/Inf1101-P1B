@@ -60,6 +60,15 @@ void setup() {
   display.begin();
   display.setFlip(true);
   display.setBrightness(10);
+  
+  // --- DISPLAY INITIALIZATION ---
+  display.setFont(thinPixel7_10ptFontInfo);          // Uses authentic TinyScreen library font configuration
+  display.fontColor(TS_8b_White, TS_8b_Black);       // White text on a Black background
+  display.clearWindow(0, 0, 96, 64);                 // Wipes the screen clear (96x64 resolution)
+  display.setCursor(20, 25);                         // Sets layout cursor position near screen center
+  display.print("TinyKey ON");                       // Text displayed at boot
+  // ------------------------------
+
   bleSetup();
   securitySetup();
   remoteSetup();
