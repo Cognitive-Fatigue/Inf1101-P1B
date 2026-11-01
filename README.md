@@ -1,7 +1,7 @@
 # Installation and setup
-Follow the tutorials below to install the required libraries
-https://learn.tinycircuits.com/Processors/TinyScreen+_Setup_Tutorial/#downloads
-https://learn.tinycircuits.com/Communication/Bluetooth-Low-Energy_TinyShield_Tutorial/
+Follow the tutorials below to install the required libraries  
+https://learn.tinycircuits.com/Processors/TinyScreen+_Setup_Tutorial/#downloads  
+https://learn.tinycircuits.com/Communication/Bluetooth-Low-Energy_TinyShield_Tutorial/  
 
 On laptop:
 - `pip install pyserial bleak`
