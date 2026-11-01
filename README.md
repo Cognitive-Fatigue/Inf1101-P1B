@@ -1,3 +1,28 @@
+# Installation and setup
+Follow the tutorials below to install the required libraries
+https://learn.tinycircuits.com/Processors/TinyScreen+_Setup_Tutorial/#downloads
+https://learn.tinycircuits.com/Communication/Bluetooth-Low-Energy_TinyShield_Tutorial/
+
+On laptop:
+- `pip install pyserial bleak`
+- `git clone -b Pair-A https://github.com/Cognitive-Fatigue/Inf1011-P1B.git`
+- STBLE fix (do this once): the installed library's `src/arduino_bluenrg_ble.cpp` has empty functions, so Bluetooth never starts. Copy `stble-patch/arduino_bluenrg_ble.cpp` from INF1011-P1B over it, then rebuild. Without it, the watch still compiles and USB works, but no Bluetooth.
+
+To run:
+`python main.py` on laptop
+In arduino IDE, top left corner: file -> open -> Inf1011-P1B -> watch -> watch.ino
+Set Tools -> Board ->TinyCircuit SAMD Board -> Tinyscreen+
+Set Tools -> port -> port that you have inserted your tinycircuit to
+![alt text](image.png)
+Upload code into tinycircuit via USB cable
+![alt text](image-1.png)
+
+Verify that tinycircuit is running:
+tinycircuit displays: `TinyKey On`
+Laptop prints `Watch connected on ...`
+Turn on and off the tinycircuit to verify that the bluetooth connection is working as it should
+
+
 # TinyKey
 
 The TinyScreen+ watch works as a security key and a remote for the laptop.
