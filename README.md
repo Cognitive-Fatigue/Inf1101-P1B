@@ -11,11 +11,10 @@ On laptop:
 To run:
 `python main.py` on laptop
 In arduino IDE, top left corner: file -> open -> Inf1011-P1B -> watch -> watch.ino
-Set Tools -> Board ->TinyCircuit SAMD Board -> Tinyscreen+
+Set Tools -> Board -> TinyCircuit SAMD Board -> Tinyscreen+
 Set Tools -> port -> port that you have inserted your tinycircuit to
-![alt text](image.png)
 Upload code into tinycircuit via USB cable
-![alt text](image-1.png)
+
 
 Verify that tinycircuit is running:
 tinycircuit displays: `TinyKey On`
