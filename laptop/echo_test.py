@@ -38,7 +38,9 @@ async def main(args):
     slow = 0
     for i in range(args.reconnect):
         connected.clear()
-        link.send_line("DROP")  # the watch ends the link, as when it walks out of range
+        while not link.send_line("DROP"):  # the watch ends the link, as when it walks out of range
+            await asyncio.wait_for(connected.wait(), 30)  # still reconnecting after a failed round: drop once it's back
+            connected.clear()
         start = time.monotonic()
         try:
             await asyncio.wait_for(connected.wait(), 15)
