@@ -18,9 +18,15 @@ Pairs B and C never touch USB or Bluetooth. Use only these:
 
 ## Running
 
-- Watch: open `watch/watch.ino` in the Arduino IDE (the other tabs load with it), board "TinyScreen+", upload.
-- Laptop: `pip install pyserial`, then `python laptop/main.py`.
-- Link test: `python laptop/echo_test.py` sends 100 random lines and checks they all come back.
+- Watch: open `watch/watch.ino` in the Arduino IDE (the other tabs load with it), board "TinyScreen+", upload. Needs the STBLE library and the BLE TinyShield on the stack.
+- STBLE fix (do this once): the installed library's `src/arduino_bluenrg_ble.cpp` has empty functions, so Bluetooth never starts. Copy `stble-patch/arduino_bluenrg_ble.cpp` over it (library folder: Arduino `libraries/STBLE/src/`), then rebuild. Without it, the watch still compiles and USB works, but no Bluetooth.
+- Laptop: `pip install pyserial bleak`, then `python laptop/main.py` (Bluetooth; it finds the watch by the name `TinyKey`). Add `--usb` to use the cable instead.
+- Link test: `python laptop/echo_test.py` sends 100 random lines and checks they all come back. `--usb` tests the cable; `--reconnect 10` also drops the Bluetooth link 10 times and checks each reconnect takes under 5 s.
+- Known issue: most reconnects take 2–4 s, but about 1 in 20 takes 7–15 s (seen on Windows). Pair A is looking into it.
+
+## Credits
+
+- `watch/ble.ino` is based on UART.ino from the STBLE library's UARTPassThrough example (Ben Rose, TinyCircuits).
 
 ## Message rules
 
