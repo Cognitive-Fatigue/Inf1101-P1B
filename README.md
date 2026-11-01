@@ -9,11 +9,11 @@ On laptop:
 - STBLE fix (do this once): the installed library's `src/arduino_bluenrg_ble.cpp` has empty functions, so Bluetooth never starts. Copy `stble-patch/arduino_bluenrg_ble.cpp` from INF1011-P1B over it, then rebuild. Without it, the watch still compiles and USB works, but no Bluetooth.
 
 To run:
-`python main.py` on laptop
-In arduino IDE, top left corner: file -> open -> Inf1011-P1B -> watch -> watch.ino
-Set Tools -> Board -> TinyCircuit SAMD Board -> Tinyscreen+
-Set Tools -> port -> port that you have inserted your tinycircuit to
-Upload code into tinycircuit via USB cable
+`python main.py` on laptop  
+In arduino IDE, top left corner: file -> open -> Inf1011-P1B -> watch -> watch.ino  
+Set Tools -> Board -> TinyCircuit SAMD Board -> Tinyscreen+  
+Set Tools -> port -> port that you have inserted your tinycircuit to  
+Upload code into tinycircuit via USB cable  
 
 
 Verify that tinycircuit is running:
