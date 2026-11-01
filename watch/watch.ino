@@ -1,46 +1,57 @@
-// TinyKey watch. Pair A owns this file: the link to the laptop.
+// TinyKey watch. Pair A owns this file: the link to the laptop (USB and Bluetooth, see ble.ino).
 // Pairs B and C work in security.ino and remote.ino and only use sendLine() and their *OnLine().
 #include <Wire.h>
 #include <SPI.h>
 #include <TinyScreen.h>
+#include <STBLE.h>
 
 TinyScreen display = TinyScreen(TinyScreenPlus);
 
 const int MAX_LINE = 128;
-char lineBuf[MAX_LINE];
-int lineLen = 0;
-bool lineTooLong = false;
 
-// Sends one message; adds the newline. Same call over USB now and Bluetooth later.
+// Each link gets its own buffer so USB and Bluetooth bytes never mix in one line.
+struct LineReader {
+  char buf[MAX_LINE];
+  int len;
+  bool tooLong;
+};
+LineReader usbIn, bleIn;
+
+// Sends one message on every connected link; adds the newline.
 void sendLine(const char *text) {
-  if (!SerialUSB) return;  // no laptop listening: don't block
-  SerialUSB.print(text);
-  SerialUSB.print('\n');
+  if (SerialUSB) {  // no laptop listening on USB: don't block
+    SerialUSB.print(text);
+    SerialUSB.print('\n');
+  }
+  bleSend(text);
 }
 
 void handleLine(const char *line) {
   if (strncmp(line, "ECHO:", 5) == 0) { sendLine(line); return; }  // link test
+  if (strcmp(line, "DROP") == 0) { bleDrop(); return; }  // reconnect test
   if (securityOnLine(line)) return;
   if (remoteOnLine(line)) return;
   // unknown messages are ignored
 }
 
 // Collects bytes into whole lines; an overlong line is dropped up to its newline.
-void readLink() {
-  while (SerialUSB.available()) {
-    char c = SerialUSB.read();
-    if (c == '\r') continue;
-    if (c == '\n') {
-      lineBuf[lineLen] = 0;
-      if (!lineTooLong && lineLen > 0) handleLine(lineBuf);
-      lineLen = 0;
-      lineTooLong = false;
-    } else if (lineLen < MAX_LINE - 1) {
-      lineBuf[lineLen++] = c;
-    } else {
-      lineTooLong = true;
-    }
+void feedByte(LineReader &in, char c) {
+  if (c == '\r') return;
+  if (c == '\n') {
+    in.buf[in.len] = 0;
+    if (!in.tooLong && in.len > 0) handleLine(in.buf);
+    in.len = 0;
+    in.tooLong = false;
+  } else if (in.len < MAX_LINE - 1) {
+    in.buf[in.len++] = c;
+  } else {
+    in.tooLong = true;
   }
+}
+
+void resetReader(LineReader &in) {
+  in.len = 0;
+  in.tooLong = false;
 }
 
 void setup() {
@@ -49,12 +60,14 @@ void setup() {
   display.begin();
   display.setFlip(true);
   display.setBrightness(10);
+  bleSetup();
   securitySetup();
   remoteSetup();
 }
 
 void loop() {
-  readLink();
+  while (SerialUSB.available()) feedByte(usbIn, SerialUSB.read());
+  bleLoop();
   securityLoop();
   remoteLoop();
 }

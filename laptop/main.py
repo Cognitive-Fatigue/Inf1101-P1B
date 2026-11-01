@@ -1,9 +1,10 @@
-"""TinyKey laptop program. Pair A owns this file. Run: python main.py"""
+"""TinyKey laptop program. Pair A owns this file. Run: python main.py (Bluetooth) or python main.py --usb"""
 import asyncio
+import sys
 
 import remote
 import security
-from link import UsbLink
+from link import BleLink, UsbLink
 
 
 def on_line(line):
@@ -22,7 +23,7 @@ def on_disconnect():
 
 
 async def main():
-    link = UsbLink(on_line, on_connect, on_disconnect)
+    link = (UsbLink if "--usb" in sys.argv else BleLink)(on_line, on_connect, on_disconnect)
     security.setup(link.send_line)
     remote.setup(link.send_line)
     await link.run()
